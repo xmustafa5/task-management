@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <section style="display: block; align-items: flex-start; gap: 10px">
+      <div
+        id="catogary"
+        style="width: 100%; gap: 10px; display: flex; height: 400px"
+      ></div>
+      <button  id="btn">اضاه</button>
+    </section>
+    <script>
+
+      const btn = document.getElementById("btn");
+      const catogary = document.getElementById("catogary");
+      btn.addEventListener("click", () => {
+        const newDiv = document.createElement("div");
+        const input  = document.createElement("input");
+        const existingInput = catogary.querySelector("input");
+        newDiv.style.width = "200px";
+        newDiv.style.height = "400px";
+        newDiv.style.background = "red";
+        catogary.appendChild(newDiv);
+        newDiv.appendChild(input)
+        input.addEventListener('blur', (e) => {
+                console.log(e.target.value);
+                const p = document.createElement('p')
+                p.textContent = e.target.value
+                newDiv.appendChild(p)
+                input.style.display = "none"
+                btn.disabled = false;
+                p.addEventListener('click', () => {
+                    input.style.display = "block";
+                    p.remove();
+                    btn.disabled = false;
+                })
+            });
+if (existingInput) {
+btn.disabled = true;
+}else{
+    btn.disabled = false;
+}
+      });
+   
+    </script>
+  </body>
+</html>
