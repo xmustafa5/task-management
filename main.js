@@ -2,9 +2,7 @@ const btn = document.getElementById("btn");
 const categories = document.getElementById("categories");
 
 const checkExistingInput = () => {
-  const existingInput = categories.querySelector(
-    "input:not([style*='display: none'])"
-  );
+  const existingInput = categories.querySelector("input:not([style*='display: none'])");
   btn.disabled = !!existingInput;
 };
 
@@ -17,7 +15,7 @@ const saveToLocalStorage = () => {
     box.querySelectorAll(".todo-list p").forEach((task) => {
       tasks.push(task.textContent);
     });
-    data.push({ category: text, tasks }); // Corrected
+    data.push({ category: text, tasks });
   });
   localStorage.setItem("categories", JSON.stringify(data));
 };
@@ -26,19 +24,45 @@ const saveToLocalStorage = () => {
 const loadFromLocalStorage = () => {
   const savedData = JSON.parse(localStorage.getItem("categories") || "[]");
   savedData.forEach(({ category, tasks }) => {
-    addNewBox(category, tasks); // Pass saved text and tasks to create boxes
+    addNewBox(category, tasks);
+  });
+};
+
+// Function to handle updating task paragraphs
+const handleTaskUpdate = (taskElement, todoList) => {
+  const editInput = document.createElement("input");
+  editInput.value = taskElement.textContent; // Set input value to current task
+  todoList.appendChild(editInput);
+  taskElement.remove(); // Remove the paragraph
+  editInput.focus();
+
+  // Handle blur event to save the updated task
+  editInput.addEventListener("blur", () => {
+    const updatedTask = editInput.value || "No text entered"; // Default if empty
+    const updatedP = document.createElement("p");
+    updatedP.textContent = updatedTask;
+    todoList.appendChild(updatedP);
+    editInput.remove(); // Remove input after editing
+    saveToLocalStorage(); // Save to localStorage after updating task
+
+    // Allow clicking on the updated task for further editing
+    updatedP.addEventListener("click", () => {
+      handleTaskUpdate(updatedP, todoList); // Call the update function
+    });
   });
 };
 
 // Function to add a new input box or paragraph
-const addNewBox = (text = "",tasks = []) => {
+const addNewBox = (text = "", tasks = []) => {
   const newDiv = document.createElement("div");
   newDiv.classList.add("box");
+
   const input = document.createElement("input");
   input.setAttribute("placeholder", "Enter category");
   input.value = text;
   newDiv.appendChild(input);
-  //delete
+
+  // Delete button
   const deleteBtn = document.createElement("button");
   deleteBtn.textContent = "Delete";
   deleteBtn.classList.add("delete-btn");
@@ -48,36 +72,55 @@ const addNewBox = (text = "",tasks = []) => {
     checkExistingInput();
   });
   newDiv.appendChild(deleteBtn); // Add delete button to the box
-  const todoList = document.createElement('div');
-  todoList.classList.add('todo-list');
-  const addTaskBtn = document.createElement('button');
-  addTaskBtn.textContent = 'Add Task';
-  addTaskBtn.classList.add('add-task-btn');
+
+  const todoList = document.createElement("div");
+  todoList.classList.add("todo-list");
+
+  const addTaskBtn = document.createElement("button");
+  addTaskBtn.textContent = "Add Task";
+  addTaskBtn.classList.add("add-task-btn");
   newDiv.appendChild(addTaskBtn);
-  addTaskBtn.addEventListener('click', () => {
-    const taskInput = document.createElement('input');
-    taskInput.setAttribute('placeholder', 'Enter task');
+
+  addTaskBtn.addEventListener("click", () => {
+    const taskInput = document.createElement("input");
+    taskInput.setAttribute("placeholder", "Enter task");
     todoList.appendChild(taskInput);
     taskInput.focus();
-    taskInput.addEventListener('blur', (e) => {
-    const task = e.target.value;
-    if (task) {
-      const p = document.createElement("p");
-      p.textContent = task;
-      todoList.appendChild(p);
-      taskInput.remove(); // Remove input after task is entered
-      saveToLocalStorage(); // Save to localStorage after adding task
-    }
+
+    taskInput.addEventListener("blur", (e) => {
+      const task = e.target.value;
+      if (task) {
+        const pr = document.createElement("p");
+        pr.textContent = task;
+        todoList.appendChild(pr);
+        taskInput.remove(); // Remove input after task is entered
+        saveToLocalStorage(); // Save to localStorage after adding task
+
+        // Attach event listener for editing the task
+        pr.addEventListener("click", () => {
+          handleTaskUpdate(pr, todoList); // Call the update function
+        });
+      }
     });
   });
+
   newDiv.appendChild(todoList);
-  if(tasks && tasks.length > 0){
-    tasks.forEach(task => {
-      const p = document.createElement("p");
-      p.textContent = task;
-      todoList.appendChild(p);
+
+  // Load existing tasks
+  if (tasks && tasks.length > 0) {
+    tasks.forEach((task) => {
+      const pr = document.createElement("p");
+      pr.textContent = task;
+
+      // Attach event listener for editing the task
+      pr.addEventListener("click", () => {
+        handleTaskUpdate(pr, todoList); // Call the update function
+      });
+
+      todoList.appendChild(pr);
     });
   }
+
   if (text) {
     // If text exists, switch to paragraph mode
     const p = document.createElement("p");
