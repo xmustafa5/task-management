@@ -13,7 +13,11 @@ const saveToLocalStorage = () => {
   const data = [];
   categories.querySelectorAll(".box").forEach((box) => {
     const text = box.querySelector("p")?.textContent || "";
-    data.push(text);
+    const tasks = [];
+    box.querySelectorAll(".todo-list p").forEach((task) => {
+      tasks.push(task.textContent);
+    });
+    data.push({ category: text, tasks }); // Corrected
   });
   localStorage.setItem("categories", JSON.stringify(data));
 };
@@ -21,18 +25,17 @@ const saveToLocalStorage = () => {
 // Load categories from localStorage
 const loadFromLocalStorage = () => {
   const savedData = JSON.parse(localStorage.getItem("categories") || "[]");
-  savedData.forEach((text) => {
-    addNewBox(text); // Pass saved text to create boxes
+  savedData.forEach(({ category, tasks }) => {
+    addNewBox(category, tasks); // Pass saved text and tasks to create boxes
   });
 };
 
 // Function to add a new input box or paragraph
-const addNewBox = (text = "") => {
+const addNewBox = (text = "",tasks = []) => {
   const newDiv = document.createElement("div");
   newDiv.classList.add("box");
-
   const input = document.createElement("input");
-  input.setAttribute("placeholder", "Enter text");
+  input.setAttribute("placeholder", "Enter category");
   input.value = text;
   newDiv.appendChild(input);
   //delete
@@ -45,7 +48,36 @@ const addNewBox = (text = "") => {
     checkExistingInput();
   });
   newDiv.appendChild(deleteBtn); // Add delete button to the box
-
+  const todoList = document.createElement('div');
+  todoList.classList.add('todo-list');
+  const addTaskBtn = document.createElement('button');
+  addTaskBtn.textContent = 'Add Task';
+  addTaskBtn.classList.add('add-task-btn');
+  newDiv.appendChild(addTaskBtn);
+  addTaskBtn.addEventListener('click', () => {
+    const taskInput = document.createElement('input');
+    taskInput.setAttribute('placeholder', 'Enter task');
+    todoList.appendChild(taskInput);
+    taskInput.focus();
+    taskInput.addEventListener('blur', (e) => {
+    const task = e.target.value;
+    if (task) {
+      const p = document.createElement("p");
+      p.textContent = task;
+      todoList.appendChild(p);
+      taskInput.remove(); // Remove input after task is entered
+      saveToLocalStorage(); // Save to localStorage after adding task
+    }
+    });
+  });
+  newDiv.appendChild(todoList);
+  if(tasks && tasks.length > 0){
+    tasks.forEach(task => {
+      const p = document.createElement("p");
+      p.textContent = task;
+      todoList.appendChild(p);
+    });
+  }
   if (text) {
     // If text exists, switch to paragraph mode
     const p = document.createElement("p");
