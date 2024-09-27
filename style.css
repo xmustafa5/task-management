@@ -325,9 +325,12 @@ body {
   width: 200px;
   height: 100%;
   background-color: #a8a8a8;
+  border-radius: 10px;
+  position: relative;
 }
 #categories .box input {
   width: 100%;
+  border-radius: 10px 10px 0px 0px;
   padding: 10px;
   border: none;
   outline: none;
@@ -337,7 +340,63 @@ body {
   padding: 10px;
   font-size: 14px;
 }
+.addContainer {
+  width: 200px;
+  height: 100%;
+  background-color: #2d2c2ca3;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  flex-direction: column;
+  gap: 10px;
+  border-radius: 10px;
+  transition: all 0.3s ease-in-out;
+  border:2px solid #11101d;
+  .pa {
+    font-size: 18px;
+    font-weight: 700;
+    list-style: decimal;
+    transition: transform 0.5s ease-in-out, fill 0.2s ease-in-out; 
 
+  }
+
+  svg {
+    fill: white;
+    transition: transform 0.5s ease-in-out, fill 0.2s ease-in-out; 
+  }
+
+  &:hover {
+    background: rgb(80, 80, 80);
+    color: black;
+    cursor: pointer;
+    .pa {
+      color: black;
+    }
+
+    svg {
+      fill: black;
+      transform: rotate(30deg); 
+    }
+  }
+}
+
+.delete-btn{
+  all: unset;
+  position: absolute;
+  bottom: 10px;
+  padding: 6px;
+  border-radius: 10px;
+  color: red;
+  border: solid 1px red;
+  background-color: transparent;
+  right: 10px;
+  cursor: pointer;
+  &:hover{
+    background-color: red;
+    color: white;
+  }
+}
 @media (max-width: 420px) {
   .sidebar.close .nav-links li .sub-menu {
     display: none;
