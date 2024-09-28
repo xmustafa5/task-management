@@ -327,6 +327,23 @@ body {
   background-color: #a8a8a8;
   border-radius: 10px;
   position: relative;
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  flex-direction: column;
+}
+.add-task-btn{
+  all: unset;
+  width: 90%;
+  height: 30px;
+  border-radius: 2px;
+  background-color: #7266fa;
+  color: white;
+  font-size: 16px;
+  text-align: center;
+  
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out;
 }
 #categories .box input {
   width: 100%;
@@ -339,6 +356,39 @@ body {
   color: #fff;
   padding: 10px;
   font-size: 14px;
+  display: flex;
+  width: 100%;
+  justify-content: start;
+}
+.todo-list{
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  overflow:hidden ;
+  overflow-y: scroll;
+  textarea{
+    width: 90% ;
+    padding: 10px;
+    border-radius: 10px !important;
+    border: none;
+    outline: none;
+    margin-bottom: 10px;
+    background: #282828;
+    height: 180px;
+    color: white;
+  }
+  p{
+    border-radius: 10px !important;
+    display: flex;
+    justify-content:center ;
+    align-items: center;
+    background: #282828;
+    min-height: 80px;
+    margin-bottom: 10px;
+    width: 90% !important;
+  }
 }
 .addContainer {
   width: 200px;
@@ -353,7 +403,9 @@ body {
   border-radius: 10px;
   transition: all 0.3s ease-in-out;
   border:2px solid #11101d;
+ 
   .pa {
+    justify-content: start;
     font-size: 18px;
     font-weight: 700;
     list-style: decimal;
